@@ -23,10 +23,10 @@ void LogFailedFilesDiagnosticConsumer::HandleDiagnostic(
     clang::DiagnosticsEngine::Level diag_level, const clang::Diagnostic& info) {
   if (diag_level == clang::DiagnosticsEngine::Error ||
       diag_level == clang::DiagnosticsEngine::Fatal) {
-    files_with_errors.insert(
-        info.getSourceManager()
-            .getFileEntryForID(info.getSourceManager().getMainFileID())
-            ->getName()
-            .str());
+    auto file_id = info.getSourceManager().getMainFileID();
+    if (file_id.isValid()) {
+      files_with_errors.insert(
+          info.getSourceManager().getFileEntryForID(file_id)->getName().str());
+    }
   }
 }

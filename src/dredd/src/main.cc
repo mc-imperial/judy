@@ -159,13 +159,15 @@ int main(int argc, const char** argv) {
         log_failed_files_diagnostic_consumer_ptr->GetFilesWithErrors().empty());
   } else {
     assert(text_diagnostic_printer_ptr->getNumErrors() > 0);
-    assert(!log_failed_files_diagnostic_consumer_ptr->GetFilesWithErrors()
-                .empty());
-    llvm::errs() << "The following files were not mutated due to compile-time "
-                    "errors; see above for details:\n";
-    for (const auto& file :
-         log_failed_files_diagnostic_consumer_ptr->GetFilesWithErrors()) {
-      llvm::errs() << "  " << file << "\n";
+    if (!log_failed_files_diagnostic_consumer_ptr->GetFilesWithErrors()
+             .empty()) {
+      llvm::errs()
+          << "The following files were not mutated due to compile-time "
+             "errors; see above for details:\n";
+      for (const auto& file :
+           log_failed_files_diagnostic_consumer_ptr->GetFilesWithErrors()) {
+        llvm::errs() << "  " << file << "\n";
+      }
     }
   }
 
